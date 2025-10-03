@@ -53,7 +53,7 @@ pub fn hash_string(s: &str) -> u64 {
     for ch in s.chars() {
         hash = ((hash << 5).wrapping_sub(hash)).wrapping_add(ch as i32);
     }
-    hash.abs() as u64
+    hash.unsigned_abs() as u64
 }
 
 /// Create a deterministic seed from a concept and language seed.

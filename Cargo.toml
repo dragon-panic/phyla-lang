@@ -6,6 +6,15 @@ authors = ["Dragon R. Sky"]
 description = "A procedural language generation library that creates consistent, deterministic constructed languages based on cultural personality traits and geographic influences"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/dragon-panic/phyla-lang"
+homepage = "https://github.com/dragon-panic/phyla-lang"
+documentation = "https://docs.rs/phyla-lang"
+readme = "README.md"
+keywords = ["language", "procedural", "conlang", "generation", "worldbuilding"]
+categories = ["games", "simulation", "text-processing"]
+exclude = [
+    "target/",
+    "language_generator.html",
+]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"], optional = true }
