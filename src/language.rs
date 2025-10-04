@@ -3,6 +3,7 @@
 use crate::culture::{CulturalProfile, Geography};
 use crate::generation::generate_word;
 use crate::genome::{LinguisticGenome, WordOrder};
+use crate::naming::NamingSystem;
 use std::collections::HashMap;
 use std::sync::Mutex;
 
@@ -13,6 +14,15 @@ pub struct Language {
 
     /// The linguistic genome (complete language specification)
     pub genome: LinguisticGenome,
+
+    /// Cultural profile used to generate this language
+    culture: CulturalProfile,
+
+    /// Geography
+    geography: Geography,
+
+    /// Naming system for generating names
+    pub naming: NamingSystem,
 
     /// Optional cache for frequently-used words
     lexicon_cache: Mutex<HashMap<String, String>>,
@@ -37,22 +47,36 @@ impl Language {
     /// ```
     pub fn from_culture(culture: CulturalProfile, geography: Geography, seed: u64) -> Self {
         let genome = LinguisticGenome::from_culture(culture, geography, seed);
+        let naming = NamingSystem::new(genome.clone(), culture, geography);
         let id = format!("lang_{}", seed);
 
         Self {
             id,
             genome,
+            culture,
+            geography,
+            naming,
             lexicon_cache: Mutex::new(HashMap::new()),
         }
     }
 
     /// Create a language directly from a genome.
-    pub fn from_genome(genome: LinguisticGenome) -> Self {
+    ///
+    /// Note: This requires providing culture and geography for the naming system.
+    pub fn from_genome(
+        genome: LinguisticGenome,
+        culture: CulturalProfile,
+        geography: Geography,
+    ) -> Self {
+        let naming = NamingSystem::new(genome.clone(), culture, geography);
         let id = format!("lang_{}", genome.seed);
 
         Self {
             id,
             genome,
+            culture,
+            geography,
+            naming,
             lexicon_cache: Mutex::new(HashMap::new()),
         }
     }

@@ -41,11 +41,20 @@ mod culture;
 mod generation;
 mod genome;
 mod language;
+mod morphology;
+pub mod naming;
 mod phonology;
 mod seeded_rng;
 
 pub use culture::{CulturalProfile, Geography};
 pub use genome::{LinguisticGenome, MorphologyType, WordOrder};
 pub use language::Language;
+pub use morphology::{CombiningRule, Morpheme, MorphemeDatabase, MorphemeType};
+pub use naming::{
+    epithet::{Characteristic, EpithetContext},
+    personal::PersonalNameContext,
+    place::{PlaceNameContext, PlaceType},
+    NamePattern, NamingSystem,
+};
 pub use phonology::{Consonant, PhonemeInventory, SyllableStructure, Vowel};
 

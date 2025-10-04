@@ -7,6 +7,7 @@ A Rust library that generates consistent, deterministic constructed languages (c
 - **Deterministic Generation**: Same inputs always produce the same outputs
 - **Cultural Personality Mapping**: HEXACO traits influence phonology, morphology, and syntax
 - **Geographic Influences**: Mountains, coasts, deserts, etc. shape sound systems
+- **Integrated Naming System**: Generate personal names, place names, and epithets from the same cultural DNA
 - **Infinite Scalability**: Generate unlimited unique languages without storing dictionaries
 - **Memory Efficient**: Store only generation parameters (~3KB per language), not full lexicons
 - **Thread-Safe**: Language objects are Send + Sync for multi-threaded use
@@ -52,6 +53,30 @@ println!("Translated phrase: {}", phrase);
 
 // Determinism: same input always produces same output
 assert_eq!(word, language.translate_word("house"));
+```
+
+### Name Generation
+
+```rust
+use phyla_lang::{Language, CulturalProfile, Geography, PersonalNameContext, PlaceNameContext, PlaceType};
+
+let culture = CulturalProfile::new(4.0, 3.0, 2.0, 3.0, 3.0, 4.0);
+let language = Language::from_culture(culture, Geography::Coastal, 12345);
+
+// Generate personal names
+let context = PersonalNameContext::simple(entity_id);
+let name = language.naming.generate_personal_name(&context);
+println!("Character name: {}", name);
+
+// Generate place names
+let place_context = PlaceNameContext::new(place_id, PlaceType::Settlement)
+    .with_geography(Geography::Coastal);
+let place_name = language.naming.generate_place_name(&place_context);
+println!("Settlement name: {}", place_name);
+
+// Names share the same phonology as the language
+let greeting = language.translate_word("hello");
+println!("{} from {}!", greeting, place_name);
 ```
 
 ## How It Works
@@ -108,18 +133,42 @@ println!("Coastal: {}", lang1.translate_word("sun"));  // Flowing, soft
 println!("Mountain: {}", lang2.translate_word("sun")); // Harsh, abrupt
 ```
 
-Run the example:
+Run the examples:
 
 ```bash
 cargo run --example basic_usage
+cargo run --example naming_system
 ```
+
+### Naming System
+
+The naming system generates culturally-consistent names based on the same linguistic foundations:
+
+**Personal Names:**
+- Simple names: "Aria", "Krag"
+- Patronymic: "Aran Thorson" (high conscientiousness cultures)
+- Compound: "Stormborn", "Ironheart" (high openness cultures)
+- Elaborate: "Lord Maxim the Third" (low honesty-humility cultures)
+
+**Place Names:**
+- Descriptive: "Deepwater", "Redmountain"
+- Founder-based: "Jamestown", "Alexandria"
+- Historical: "Battleford", "Victory Bay"
+- Mythopoetic: "Dragonspire", "Moonhaven" (high openness cultures)
+
+**Epithets:**
+- Achievement: "Dragonslayer", "the Conqueror"
+- Birth circumstance: "Stormborn", "of the Winter"
+- Characteristic: "the Wise", "the Brave"
+
+Names use the same phonology, morphemes, and cultural weights as the language, ensuring coherence.
 
 ### Use Cases
 
-1. **Game Worlds**: Generate distinct languages for factions/cultures
-2. **Worldbuilding**: Create realistic language families with evolution
-3. **Procedural Content**: Generate names, places, dialogue
-4. **Translation Systems**: Convert between constructed languages
+1. **Game Worlds**: Generate distinct languages and naming conventions for factions/cultures
+2. **Worldbuilding**: Create realistic language families with consistent naming patterns
+3. **Procedural Content**: Generate character names, place names, dialogue
+4. **Simulation**: Deterministic name generation for reproducible worlds
 
 ## Architecture
 
@@ -129,7 +178,9 @@ cargo run --example basic_usage
 - `PhonemeInventory`: Available sounds (consonants and vowels)
 - `SyllableStructure`: Patterns like CV, CVC, CCVC
 - `WordOrder`: SVO, SOV, VSO, etc.
-- `Language`: Public API for word/phrase translation
+- `MorphemeDatabase`: Semantic building blocks weighted by cultural importance
+- `NamingSystem`: Generate personal, place, and epithet names
+- `Language`: Public API for word/phrase translation and name generation
 
 ### Performance
 
@@ -169,12 +220,15 @@ Languages **emerge** from parameterized cultural profiles rather than being manu
 
 ## Future Enhancements
 
+- ✅ **Naming System** (completed)
 - Writing system generation (orthography)
 - Historical sound changes and language evolution
 - Language family relationships (proto-languages, daughter languages)
 - Dialectal variation
 - Full morphological analysis (affixes, inflections)
 - Phonotactic constraints (rules about sound combinations)
+- Object naming (tools, weapons, artifacts)
+- Family/clan names with inheritance
 
 ## License
 
